@@ -49,14 +49,21 @@ Yêu cầu Python 3.8+
 pip install -r requirements.txt
 ```
 
-### 2. Tạo Vector Database
+### 2. Thêm Google API Key
+Tạo file .env như sau:
+
+```bash
+GOOGLE_API_KEY = "YOUR API KEY"  # Thay bằng API key của bạn
+```
+
+### 3. Tạo Vector Database
 Chạy các lệnh sau để tạo vector database từ dữ liệu thuốc và bệnh:
 
 ```python
 python create_db.py
 ```
 
-### 3. Chạy Chatbot
+### 4. Chạy Chatbot
 
 ```python
 python app.py
