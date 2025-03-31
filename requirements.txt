@@ -7,6 +7,8 @@ transformers>=4.39.3
 
 # ChromaDB 
 chromadb>=0.4.22
+langchain-chroma>=0.1.0
+
 
 # Sentence Transformers
 sentence-transformers>=2.5.1

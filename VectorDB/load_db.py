@@ -1,5 +1,5 @@
-from langchain.vectorstores import Chroma
-from langchain.embeddings import HuggingFaceEmbeddings
+from langchain_chroma import Chroma
+from langchain_huggingface import HuggingFaceEmbeddings
 from Chatbot.config import PERSIST_DIRECTORY, EMBEDDING_MODEL
 
 # Load embedding model

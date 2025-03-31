@@ -3,29 +3,34 @@ from Chatbot.conversation import create_conversational_chain, create_response, m
 from VectorDB.load_db import load_db
 from Model.model import llm
 
-### Kiểm tra thử nghiệm
+def initialize_chatbot():
 
-# Load vector database
-db_thuoc = load_db("thuoc")
-db_benh = load_db("benh")
+    db_thuoc = load_db("thuoc")
+    db_benh = load_db("benh")
+    answer_prompt, classification_prompt = create_prompt_template()
+    return db_thuoc, db_benh, answer_prompt, classification_prompt
 
-# Câu hỏi
-question = "Bạn là ai?"
+def process_chat(question, db_thuoc, db_benh, answer_prompt, classification_prompt):
+    
+    data_type = detect_data_type(question, classification_prompt, llm)
 
-# Tạo prompt
-answer_prompt, classification_prompt = create_prompt_template()
+    retriever = reranking(db_thuoc, db_benh, data_type)
 
-# Phân loại data
-data_type = detect_data_type(question, classification_prompt, llm)
+    chain = create_conversational_chain(llm, retriever, memory, answer_prompt)
 
-# Tạo retriever
-retriever = reranking(db_thuoc, db_benh, data_type)
+    response = create_response(question, chain)
+    return response
 
-# Tạo chain với bộ nhớ
-chain = create_conversational_chain(llm, retriever, memory, answer_prompt)
+def main():
+    db_thuoc, db_benh, answer_prompt, classification_prompt = initialize_chatbot()
+    while True:
+        user_input = input("Bạn: ")
+        if user_input.lower() in ["exit", "quit", "thoát"]:
+            print("ChatBot: Cảm ơn vì được hỗ trợ bạn! Tạm biệt! Hẹn gặp lại sau.")
+            break
+        
+        response = process_chat(user_input, db_thuoc, db_benh, answer_prompt, classification_prompt)
+        print("ChatBot:", response, "\n")
 
-# Tạo response
-response = create_response(question, chain)
-
-print("Trả lời:", response)
-print("Phân loại:", data_type)
+if __name__ == "__main__":
+    main()

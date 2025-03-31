@@ -13,5 +13,5 @@ def create_conversational_chain(llm, retriever, memory, answer_prompt):
     return chain
 
 def create_response(question, chain):
-    response = chain({"question": question})
+    response = chain.invoke({"question": question})  
     return response["answer"]

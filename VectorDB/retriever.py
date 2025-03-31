@@ -1,4 +1,4 @@
-from langchain.vectorstores import Chroma
+from langchain_chroma import Chroma
 from Model.model import embedding_model, persist_directory
 
 def query_db(query, data_type="thuoc", top_k=5):

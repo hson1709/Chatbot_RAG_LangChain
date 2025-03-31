@@ -2,6 +2,7 @@ from langchain.chains import ConversationalRetrievalChain, LLMChain
 from langchain.prompts import PromptTemplate
 from langchain.retrievers import ContextualCompressionRetriever
 from langchain.retrievers import EnsembleRetriever
+from langchain_core.runnables import RunnableSequence
 from Model.model import compressor
 
 
@@ -23,7 +24,7 @@ def create_prompt_template():
     Hãy trả lời một cách thân thiện với người dùng.
     Nếu thông tin không đầy đủ, trả lời: "Xin lỗi, tôi chưa thể giải đáp thắc mắc của bạn, xin vui lòng đặt câu hỏi chi tiết hơn".
     Nếu câu hỏi không thuộc lĩnh vực y tế, trả lời: "Xin lỗi, tôi chỉ có thể cung cấp các thông tin về y tế", trừ trường hợp hỏi về thông tin cá nhân của bạn thì hãy giới thiệu bản thân.
-    Nếu không biết câu trả lời, trả lời: "Tôi không biết".
+    Nếu không biết câu trả lời, trả lời: "Xin lỗi câu hỏi của bạn nằm ngoài tầm hiểu biết của tôi.".
 
 
     {context}
@@ -45,15 +46,12 @@ def create_conversational_chain(llm, retriever, memory, answer_prompt):
     )
     return chain
 
-def create_response(question, chain):
-    response = chain({"question": question})
-    return response["answer"]
-    
+
 
 # Hàm xác định loại truy vấn bằng Gemini
 def detect_data_type(question, classification_prompt, llm):
-    classification_chain = LLMChain(llm=llm, prompt=classification_prompt)
-    data_type = classification_chain.run(question)
+    classification_chain = RunnableSequence(classification_prompt | llm)  
+    data_type = classification_chain.invoke({"query": question}) 
     return data_type
 
 

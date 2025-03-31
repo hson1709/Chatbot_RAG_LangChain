@@ -1,5 +1,5 @@
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.vectorstores import Chroma
+from langchain_chroma import Chroma
 from Chatbot.config import PERSIST_DIRECTORY
 from Model.model import embedding_model
 

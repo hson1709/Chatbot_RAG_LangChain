@@ -1,5 +1,5 @@
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.retrievers.document_compressors import CrossEncoderReranker
 from langchain_community.cross_encoders import HuggingFaceCrossEncoder
 from Chatbot.config import LLM_MODEL,EMBEDDING_MODEL,PERSIST_DIRECTORY,RERANKER_MODEL, GOOGLE_API_KEY
