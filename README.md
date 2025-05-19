@@ -1,8 +1,8 @@
-# Chatbot RAG y tế với LangChain
+# RAG y tế với LangChain
 
 ## Giới Thiệu
 
-Dự án này là một chatbot RAG (Retrieval-Augmented Generation) chuyên về lĩnh vực y tế, sử dụng **LangChain** và **Google Gemini API** để giải đáp thông tin về bệnh và thuốc.
+Dự án này là một RAG (Retrieval-Augmented Generation) chuyên về lĩnh vực y tế, sử dụng **LangChain** và **Google Gemini API** để giải đáp thông tin về bệnh và thuốc.
 
 Chatbot có khả năng:
 - Tìm kiếm và trích xuất thông tin thuốc và bệnh từ kho dữ liệu.
