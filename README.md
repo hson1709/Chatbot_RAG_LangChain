@@ -1,4 +1,4 @@
-# RAG y tế với LangChain
+# ChatBot RAG y tế với LangChain
 
 ![image](https://github.com/hson1709/Chatbot_RAG_LangChain/blob/master/UI.png)
 
