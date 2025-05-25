@@ -1,6 +1,6 @@
 # RAG y tế với LangChain
 
-![image]()
+![image](https://github.com/hson1709/Chatbot_RAG_LangChain/blob/master/UI.png)
 
 ## Giới Thiệu
 
