@@ -1,13 +1,12 @@
-from langchain.chains import ConversationalRetrievalChain, LLMChain
+from langchain.chains import ConversationalRetrievalChain
 from langchain.prompts import PromptTemplate
 from langchain.retrievers import ContextualCompressionRetriever
 from langchain.retrievers import EnsembleRetriever
 from langchain_core.runnables import RunnableSequence
 from Model.model import compressor
 
-
+# Cấu hình prompt
 def create_prompt_template():
-    # Cấu hình prompt
     classification_prompt_template = """Bạn là một trợ lý y tế thông minh.
     Hãy phân loại truy vấn sau đây vào một trong bốn nhóm (chỉ trả lời "thuoc", "benh", "nhieu" hoặc "unknown"):
     1. "thuoc" nếu nó liên quan đến thông tin thuốc (thành phần, công dụng, liều lượng, tác dụng phụ, bảo quản, cách dùng).
@@ -19,14 +18,20 @@ def create_prompt_template():
     Phân loại:"""
 
 
-    answer_prompt_template = """Bạn là: BotTech, một trợ lý y tế thông minh giúp giải đáp thắc mắc của bệnh nhân.
-    Sử dụng thông tin sau để trả lời câu hỏi một cách chính xác, chỉ đưa ra câu trả lời trực tiếp từ thông tin cung cấp.
+    answer_prompt_template = """Bạn là BotTech — một trợ lý y tế thông minh, thân thiện và đáng tin cậy, chuyên hỗ trợ giải đáp các thắc mắc về bệnh lý và thuốc.
+    Dựa vào thông tin được cung cấp bên dưới phần "Nội dung", hãy trả lời câu hỏi một cách chính xác, dễ hiểu và phù hợp với người dùng phổ thông.
     Hãy trả lời một cách thân thiện với người dùng.
-    Nếu thông tin không đầy đủ, trả lời: "Xin lỗi, tôi chưa thể giải đáp thắc mắc của bạn, xin vui lòng đặt câu hỏi chi tiết hơn".
-    Nếu câu hỏi không thuộc lĩnh vực y tế, trả lời: "Xin lỗi, tôi chỉ có thể cung cấp các thông tin về y tế", trừ trường hợp hỏi về thông tin cá nhân của bạn thì hãy giới thiệu bản thân.
-    Nếu không biết câu trả lời, trả lời: "Xin lỗi câu hỏi của bạn nằm ngoài tầm hiểu biết của tôi.".
 
+    Nguyên tắc trả lời:
+    - Chỉ sử dụng thông tin từ phần "Nội dung". Không tự tạo hoặc phỏng đoán thông tin.
+    - Hãy cố gắng trả lời dựa vào thông tin sẵn có. Trong trường hợp phần "Nội dung" không chứa các thông tin về câu hỏi, hãy phản hồi:  
+    "Xin lỗi, tôi chưa thể giải đáp thắc mắc của bạn. Vui lòng đặt câu hỏi cụ thể hoặc chi tiết hơn."
+    - Nếu câu hỏi không liên quan đến lĩnh vực y tế, hãy phản hồi:  
+    "Xin lỗi, tôi chỉ có thể cung cấp thông tin trong lĩnh vực y tế."
+    - Nếu người dùng hỏi về bạn, hãy giới thiệu:  
+    "Tôi là BotTech — một trợ lý y tế thông minh được phát triển để hỗ trợ người dùng về y tế."
 
+    Nội dung:
     {context}
 
     Câu hỏi: {question}
@@ -56,11 +61,11 @@ def detect_data_type(question, classification_prompt, llm):
 
 
 # Reranking các retriver
-def reranking(db_thuoc, db_benh, data_type, k=20):
+def reranking(db_thuoc, db_benh, data_type):
 
     if data_type == "nhieu":
-        retriever_thuoc = db_thuoc.as_retriever(search_type="mmr", search_kwargs={"k": k})
-        retriever_benh = db_benh.as_retriever(search_type="mmr", search_kwargs={"k": k})
+        retriever_thuoc = db_thuoc.as_retriever(search_type="mmr", search_kwargs={"k": 20})
+        retriever_benh = db_benh.as_retriever(search_type="mmr", search_kwargs={"k": 20})
         ensemble_retriever = EnsembleRetriever(retrievers=[retriever_thuoc, retriever_benh])
         compression_retriever = ContextualCompressionRetriever(
             base_compressor=compressor,
@@ -68,7 +73,7 @@ def reranking(db_thuoc, db_benh, data_type, k=20):
         )
     else:
         db = db_thuoc if data_type == "thuoc" else db_benh
-        retriever = db.as_retriever(search_type="mmr", search_kwargs={"k": k})
+        retriever = db.as_retriever(search_type="mmr", search_kwargs={"k": 20})
         compression_retriever = ContextualCompressionRetriever(
             base_compressor=compressor,
             base_retriever=retriever

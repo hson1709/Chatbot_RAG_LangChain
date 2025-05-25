@@ -16,4 +16,4 @@ persist_directory = PERSIST_DIRECTORY
 
 # Mô hình Reranking (Cross-Encoder)
 reranker = HuggingFaceCrossEncoder(model_name=RERANKER_MODEL)
-compressor = CrossEncoderReranker(model=reranker, top_n=10)
+compressor = CrossEncoderReranker(model=reranker, top_n=5)
