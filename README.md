@@ -33,31 +33,37 @@ This project is a Retrieval-Augmented Generation (RAG) chatbot specialized in th
 
 ## Setup & Usage
 
-### 1. Environment Setup
+You can easily run this project using Docker. Make sure you have [Docker](https://www.docker.com/) installed on your system.
 
-Ensure Python 3.8+ is installed.
+### 1. Build the Docker Image
 
-```bash
-pip install -r requirements.txt
-```
-
-### 2. Add Google API Key
-Create a .env file in the project root:
+Open a terminal in the project directory and run:
 
 ```bash
-GOOGLE_API_KEY = "YOUR API KEY"  
+docker build -t medical-rag-chatbot .
 ```
 
-### 3. Build Vector Database
-Generate the vector database by running:
+### 2. Prepare Environment Variables
 
-```python
-python create_db.py
+Create a `.env` file in the project root with your Google API key:
+
+```env
+GOOGLE_API_KEY=YOUR_API_KEY
 ```
 
-### 4. Run the Chatbot
-Start the web-based chatbot application with:
+### 3. Run the Container
 
-```python
-python app.py
+Start the chatbot with:
+
+```bash
+docker run -p 5000:5000 --env-file .env medical-rag-chatbot
+```
+
+- The app will be available at [http://localhost:5000](http://localhost:5000).
+
+**Note:**  
+Before running the chatbot, you may need to build the vector database inside the container. You can do this by running:
+
+```bash
+docker run --env-file .env medical-rag-chatbot python create_db.py
 ```
